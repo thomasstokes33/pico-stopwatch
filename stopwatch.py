@@ -5,7 +5,7 @@ Author1: Thomas
 Date: May 2023
 
 REQUIREMENTS: 
-* Pimoroni-Pico Library: https://github.com/pimoroni/pimoroni-pico
+* Pimoroni-Pico Library:https://github.com/pimoroni/pimoroni-pico/releases/tag/v1.20.1
 *
 
 '''
@@ -49,6 +49,9 @@ def resetTime():
 
 
 def getTime():
+    '''
+    This function returns the time since the stopwatch was started.
+    '''
     if run:
         
         return time.time() - startTime
@@ -56,7 +59,7 @@ def getTime():
         return pausedTime-startTime
 
 def play():
-    #print("play")
+    
     global run, startTime, pausedTime
     if not run:
         if (startTime!=pausedTime ):
@@ -71,7 +74,7 @@ def play():
         
 
 def stop():
-    #print("stop")
+    
     global run,pausedTime
     if run:
         run=False
@@ -91,12 +94,12 @@ display.update() # Updates the display
 
 startButton.irq(lambda p: play(),Pin.IRQ_FALLING)
 stopButton.irq(lambda p: stop(),Pin.IRQ_FALLING)
-#print("Setup complete")
+
+
 while True:
-    
     clear()
     display.set_pen(WHITE) 
-    display.text(str(getTime()), 10, 10, 240, 3) 
+    display.text(str(getTime()), 10, 10, 240, 3) #main loop which displays the stopwatch
     display.update()
     time.sleep(0.2)
 

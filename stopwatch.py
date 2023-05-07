@@ -16,9 +16,10 @@ from picographics import PicoGraphics, DISPLAY_PICO_DISPLAY, PEN_RGB332
 import time
 import sys
 import select
+from machine import Pin
 
 # Setting up the display
-display = PicoGraphics(display = DISPLAY_PICO_DISPLAY, pen_type = PEN_RGB332, rotate = 90)
+display = PicoGraphics(display = DISPLAY_PICO_DISPLAY, pen_type = PEN_RGB332, rotate = 270)
 display.set_font("bitmap8")
 
 # Setting up colours
@@ -41,33 +42,45 @@ def resetTime():
     '''
     This function resets the time to 0
     '''
-    global startTime 
+    global startTime,pausedTime
     startTime = time.time()
+  
+    pausedTime= startTime
+    
+
 
 def getTime():
     if run:
+        
         return time.time() - startTime
     else:
         return pausedTime-startTime
 
 def play():
-    global run
-    run=True
-    while run:
-        clear()
-        display.set_pen(WHITE) 
-        display.text(str(getTime()), 10, 10, 240, 3) 
-        display.update() 
-        time.sleep(0.1)
+    #print("play")
+    global run, startTime, pausedTime
+    if not run:
+        if (startTime!=pausedTime ):
+            currentlyDisplayed = pausedTime-startTime
+            startTime = time.time()-currentlyDisplayed
+        else:
+            startTime = time.time()
+        run=True    
+    
+    
+    
+        
 
 def stop():
-    global run
-    run=False
-    pausedTime = time.time()
+    #print("stop")
+    global run,pausedTime
+    if run:
+        run=False
+        pausedTime = time.time()
 
-startButton = Pin(16,Pin.IN,Pin.PULL_UP) #a starts
-stopButton =   Pin(17,PIN.IN,Pin.PULL_UP) #b stops
-resetPin = Pin(19,Pin.In,Pin.PULL_UP) #x resets
+startButton = Pin(12,Pin.IN,Pin.PULL_UP) #a starts
+stopButton =   Pin(13,Pin.IN,Pin.PULL_UP) #b stops
+resetPin = Pin(14,Pin.IN,Pin.PULL_UP) #x resets
 run = False
 startTime = time.time()
 pausedTime = startTime
@@ -79,5 +92,15 @@ display.update() # Updates the display
 
 startButton.irq(lambda p: play(),Pin.IRQ_FALLING)
 stopButton.irq(lambda p: stop(),Pin.IRQ_FALLING)
+#print("Setup complete")
 while True:
-    pass
+    
+    clear()
+    display.set_pen(WHITE) 
+    display.text(str(getTime()), 10, 10, 240, 3) 
+    display.update()
+    time.sleep(0.2)
+
+
+
+

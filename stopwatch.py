@@ -50,7 +50,7 @@ def resetTime():
 
 def getTime():
     '''
-    This function returns the time since the stopwatch was started.
+    This function returns the time since the stopwatch was started
     '''
     if run:
         
@@ -59,14 +59,16 @@ def getTime():
         return pausedTime-startTime
 
 def play():
-    
+    '''
+    Handles the start button being pressed
+    '''
     global run, startTime, pausedTime
-    if not run:
+    if not run: #catches button presses whilst already playing
         if (startTime!=pausedTime ):
             currentlyDisplayed = pausedTime-startTime
             startTime = time.time()-currentlyDisplayed
         else:
-            startTime = time.time()
+            startTime = time.time()  #this is the case for when it is first started or reset to zero.
         run=True    
     
     
@@ -74,7 +76,9 @@ def play():
         
 
 def stop():
-    
+    '''
+    Handles the stop button being pressed
+    '''
     global run,pausedTime
     if run:
         run=False
@@ -86,7 +90,7 @@ resetPin = Pin(14,Pin.IN,Pin.PULL_UP) #x resets
 run = False
 startTime = time.time()
 pausedTime = startTime
-resetPin.irq(lambda pin: resetTime(),Pin.IRQ_FALLING)
+resetPin.irq(lambda pin: resetTime(),Pin.IRQ_FALLING) #Falling is used so that pressing the button only triggers the reset once
 clear()
 display.set_pen(WHITE) # Sets the colour of the text
 display.text(str(getTime()), 10, 10, 240, 3) # Displays the text: text, x, y, wrap length, scale          text, x, y, wrap length, scale,angle,spacing

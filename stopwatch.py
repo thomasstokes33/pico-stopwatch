@@ -8,7 +8,6 @@ REQUIREMENTS:
 * Pimoroni-Pico Library: https://github.com/pimoroni/pimoroni-pico
 *
 
-The following program runs on the Raspberry Pi Pico and displays the info received through the usb serial port.
 '''
 
 from pimoroni import Button
